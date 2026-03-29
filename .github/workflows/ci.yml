@@ -46,7 +46,6 @@ jobs:
 
       - name: Bump tag in deploy repo
         uses: actions/github-script@v7
-        environment: backend
         with:
           github-token: ${{ secrets.DEPLOY_PAT }}
           script: |
