@@ -13,18 +13,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем Poetry
 RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH="$POETRY_HOME/bin:$PATH"
 
 WORKDIR /app
 
-# Копируем только манифесты — слой кэшируется пока не изменятся зависимости
-COPY pyproject.toml poetry.lock* ./
-RUN poetry install --only main --no-root
+COPY pyproject.toml poetry.lock ./
+RUN poetry install --no-root --only main
 
-# Копируем остальной код
 COPY . .
 
 EXPOSE 8000
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "-m", "app"]
